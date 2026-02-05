@@ -1,34 +1,38 @@
-import React from 'react';
+import React from "react";
 
-/**
- * Renders a table of transactions for a single month,
- * showing date, amount, and points earned per transaction,
- * plus a monthly subtotal.
- */
 function MonthlyBreakdown({ month, transactions, monthlyPoints }) {
   return (
-    <div className="monthly-breakdown">
-      <h3>
-        {month} &mdash; <span className="month-points">{monthlyPoints} pts</span>
+    <div className="mt-5 first:mt-4">
+      <h3 className="text-sm font-semibold text-slate-600 mb-2 flex items-center gap-2">
+        {month}
+        <span className="text-indigo-600 font-bold">{monthlyPoints} pts</span>
       </h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions.map((txn) => (
-            <tr key={txn.id}>
-              <td>{new Date(txn.date).toLocaleDateString()}</td>
-              <td>${txn.amount.toFixed(2)}</td>
-              <td>{txn.points}</td>
+      <div className="overflow-x-auto rounded-lg border border-slate-200">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-slate-100 text-slate-500 uppercase text-xs tracking-wider">
+              <th className="text-left px-4 py-2.5 font-semibold">Date</th>
+              <th className="text-left px-4 py-2.5 font-semibold">Amount</th>
+              <th className="text-right px-4 py-2.5 font-semibold">Points</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {transactions.map((txn) => (
+              <tr key={txn.id} className="hover:bg-white transition-colors">
+                <td className="px-4 py-2.5 text-slate-700">
+                  {new Date(txn.date).toLocaleDateString()}
+                </td>
+                <td className="px-4 py-2.5 text-slate-700 font-medium">
+                  ${txn.amount.toFixed(2)}
+                </td>
+                <td className="px-4 py-2.5 text-right font-semibold text-indigo-600">
+                  {txn.points}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

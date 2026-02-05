@@ -1,10 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import MonthlyBreakdown from './MonthlyBreakdown';
+import React, { useState, useCallback } from "react";
+import MonthlyBreakdown from "./MonthlyBreakdown";
 
-/**
- * Displays a single customer's reward summary with an
- * expandable section showing the monthly breakdown.
- */
 function CustomerRewards({ customer }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -13,17 +9,31 @@ function CustomerRewards({ customer }) {
   }, []);
 
   return (
-    <div className="customer-card">
-      <div className="customer-header" onClick={toggle} role="button" tabIndex={0}>
-        <h2>{customer.name}</h2>
-        <span className="total-points">
-          Total: <strong>{customer.totalPoints}</strong> pts
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-shadow hover:shadow-md">
+      <div
+        className="flex items-center px-5 py-4 cursor-pointer select-none hover:bg-slate-50 transition-colors"
+        onClick={toggle}
+        role="button"
+        tabIndex={0}
+      >
+        <div className="flex-1 min-w-0">
+          <h2 className="text-lg font-semibold text-slate-800 truncate">
+            {customer.name}
+          </h2>
+        </div>
+        <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-sm font-semibold px-3 py-1 rounded-full mr-3">
+          {customer.totalPoints} pts
         </span>
-        <span className="toggle-icon">{expanded ? '▲' : '▼'}</span>
+        <span
+          className="text-slate-400 text-xs transition-transform duration-200"
+          style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)" }}
+        >
+          ▼
+        </span>
       </div>
 
       {expanded && (
-        <div className="customer-details">
+        <div className="px-5 pb-5 border-t border-slate-100 bg-slate-50/50">
           {Object.entries(customer.months).map(([month, data]) => (
             <MonthlyBreakdown
               key={month}

@@ -1,12 +1,7 @@
-import React, { useMemo } from 'react';
-import { calculatePoints } from '../utils/calculatePoints';
-import CustomerRewards from './CustomerRewards';
+import React, { useMemo } from "react";
+import { calculatePoints } from "../utils/calculatePoints";
+import CustomerRewards from "./CustomerRewards";
 
-/**
- * Top-level component that takes raw transactions,
- * groups them by customer, computes per-month and total points,
- * and renders a CustomerRewards card for each customer.
- */
 function RewardsSummary({ transactions }) {
   const customerData = useMemo(() => {
     const grouped = {};
@@ -18,9 +13,9 @@ function RewardsSummary({ transactions }) {
         grouped[customerId] = { name, months: {} };
       }
 
-      const month = new Date(date).toLocaleString('default', {
-        month: 'long',
-        year: 'numeric',
+      const month = new Date(date).toLocaleString("default", {
+        month: "long",
+        year: "numeric",
       });
 
       if (!grouped[customerId].months[month]) {
@@ -39,7 +34,7 @@ function RewardsSummary({ transactions }) {
     return Object.entries(grouped).map(([customerId, data]) => {
       const totalPoints = Object.values(data.months).reduce(
         (sum, m) => sum + m.points,
-        0
+        0,
       );
 
       return {
@@ -52,7 +47,7 @@ function RewardsSummary({ transactions }) {
   }, [transactions]);
 
   return (
-    <div className="rewards-summary">
+    <div className="space-y-4">
       {customerData.map((customer) => (
         <CustomerRewards key={customer.customerId} customer={customer} />
       ))}
