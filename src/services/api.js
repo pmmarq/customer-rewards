@@ -8,7 +8,7 @@ import transactions from "../data/transactions";
  */
 export function fetchTransactions() {
   return new Promise((resolve) => {
-    const delay = Math.random() * 3000;
+    const delay = Math.random() * 1500;
     setTimeout(() => {
       resolve(transactions);
     }, delay);
