@@ -31,23 +31,32 @@ describe("App", () => {
     jest.restoreAllMocks();
   });
 
-  it("renders the app header", () => {
+  it("renders the app header", async () => {
     render(<App />);
     expect(screen.getByText(/customer rewards program/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    });
   });
 
-  it("renders Rewards and Analytics navigation tabs", () => {
+  it("renders Rewards and Analytics navigation tabs", async () => {
     render(<App />);
     expect(screen.getByRole("tab", { name: "Rewards" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Analytics" })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    });
   });
 
-  it("shows Rewards tab as active by default", () => {
+  it("shows Rewards tab as active by default", async () => {
     render(<App />);
     expect(screen.getByRole("tab", { name: "Rewards" })).toHaveAttribute(
       "aria-selected",
       "true",
     );
+    await waitFor(() => {
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    });
   });
 
   it("shows RewardsSummary content by default after loading", async () => {
