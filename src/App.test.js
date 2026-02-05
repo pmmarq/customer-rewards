@@ -99,4 +99,12 @@ describe("App", () => {
     expect(screen.getByRole("status")).toBeInTheDocument();
     expect(screen.getByText("Loading transactions...")).toBeInTheDocument();
   });
+
+  it("displays an error message when the API call fails", async () => {
+    api.fetchTransactions.mockRejectedValue(new Error("Network failure"));
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByText("Error: Network failure")).toBeInTheDocument();
+    });
+  });
 });
