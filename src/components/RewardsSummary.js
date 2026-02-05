@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import { calculatePoints } from "../utils/calculatePoints";
 import CustomerRewards from "./CustomerRewards";
 
@@ -54,5 +55,17 @@ function RewardsSummary({ transactions }) {
     </div>
   );
 }
+
+RewardsSummary.propTypes = {
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      customerId: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired
+    })
+  ).isRequired
+};
 
 export default RewardsSummary;

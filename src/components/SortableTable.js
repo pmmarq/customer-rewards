@@ -22,26 +22,17 @@ function SortableTable({ title, columns, data, rowKey, defaultSortKey, defaultSo
       setSortKey(key);
       setSortDir('asc');
     }
-  }, [sortKey]);
+  }, [sortKey]); 
 
   const sortedData = useMemo(() => {
     if (!sortKey) return data;
 
     return [...data].sort((a, b) => {
-      let aVal = a[sortKey];
-      let bVal = b[sortKey];
+      const aVal = a[sortKey];
+      const bVal = b[sortKey];
 
       let cmp;
       if (typeof aVal === 'string') {
-        // For name field, sort by last name
-        if (sortKey === 'name') {
-          const getLastName = (fullName) => {
-            const parts = fullName.trim().split(/\s+/);
-            return parts.length > 1 ? parts[parts.length - 1] : parts[0];
-          };
-          aVal = getLastName(aVal);
-          bVal = getLastName(bVal);
-        }
         cmp = aVal.localeCompare(bVal);
       } else {
         cmp = aVal - bVal;

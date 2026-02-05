@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function MonthlyBreakdown({ month, transactions, monthlyPoints }) {
   return (
@@ -36,5 +37,18 @@ function MonthlyBreakdown({ month, transactions, monthlyPoints }) {
     </div>
   );
 }
+
+MonthlyBreakdown.propTypes = {
+  month: PropTypes.string.isRequired,
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      date: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired,
+      points: PropTypes.number.isRequired
+    })
+  ).isRequired,
+  monthlyPoints: PropTypes.number.isRequired
+};
 
 export default MonthlyBreakdown;

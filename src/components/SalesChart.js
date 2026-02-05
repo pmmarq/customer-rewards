@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   BarChart,
   Bar,
@@ -89,5 +90,23 @@ function SalesChart({ monthlyTrends }) {
     </div>
   );
 }
+
+CustomTooltip.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+  label: PropTypes.string
+};
+
+SalesChart.propTypes = {
+  monthlyTrends: PropTypes.arrayOf(
+    PropTypes.shape({
+      month: PropTypes.string.isRequired,
+      sortKey: PropTypes.string.isRequired,
+      transactionCount: PropTypes.number.isRequired,
+      totalSpent: PropTypes.number.isRequired,
+      totalPoints: PropTypes.number.isRequired
+    })
+  )
+};
 
 export default SalesChart;

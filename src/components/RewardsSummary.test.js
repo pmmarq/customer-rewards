@@ -59,4 +59,30 @@ describe("RewardsSummary", () => {
 
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
+
+  it("handles transactions with new customers correctly", () => {
+    const newTransactions = [
+      { id: 5, customerId: 3, name: "Charlie Brown", date: "2024-10-15", amount: 80.0 }
+    ];
+
+    render(<RewardsSummary transactions={newTransactions} />);
+
+    expect(screen.getByText("Charlie Brown")).toBeInTheDocument();
+    expect(screen.getByText("30 pts")).toBeInTheDocument();
+  });
+
+  it("handles transactions in different months correctly", () => {
+    const multiMonthTransactions = [
+      { id: 6, customerId: 4, name: "Diana Prince", date: "2024-08-15", amount: 60.0 },
+      { id: 7, customerId: 4, name: "Diana Prince", date: "2024-09-20", amount: 110.0 }
+    ];
+
+    render(<RewardsSummary transactions={multiMonthTransactions} />);
+    
+    // Expand Diana's card to see monthly breakdown
+    userEvent.click(screen.getByText("Diana Prince"));
+
+    expect(screen.getByText(/August 2024/)).toBeInTheDocument();
+    expect(screen.getByText(/September 2024/)).toBeInTheDocument();
+  });
 });

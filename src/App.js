@@ -4,6 +4,7 @@ import { useTransactions } from "./hooks/useTransactions";
 import Navigation from "./components/Navigation";
 import RewardsSummary from "./components/RewardsSummary";
 import Analytics from "./components/Analytics";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   const { transactions, loading, error } = useTransactions();
@@ -41,14 +42,20 @@ function App() {
           </div>
         )}
         {!loading && !error && activeTab === "Rewards" && (
-          <RewardsSummary transactions={transactions} />
+          <ErrorBoundary>
+            <RewardsSummary transactions={transactions} />
+          </ErrorBoundary>
         )}
         {!loading && !error && activeTab === "Analytics" && (
-          <Analytics transactions={transactions} />
+          <ErrorBoundary>
+            <Analytics transactions={transactions} />
+          </ErrorBoundary>
         )}
       </main>
     </div>
   );
 }
+
+App.propTypes = {};
 
 export default App;

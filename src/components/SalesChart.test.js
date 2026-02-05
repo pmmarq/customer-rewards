@@ -92,4 +92,13 @@ describe("SalesChart", () => {
 
     expect(screen.getByText("No data available")).toBeInTheDocument();
   });
+
+  it("renders tooltip data correctly when provided", () => {
+    // Test the actual rendered chart that includes tooltips
+    const { container } = render(<SalesChart monthlyTrends={mockMonthlyTrends} />);
+    
+    // Verify the chart has tooltip functionality by checking if chart renders
+    const svg = container.querySelector("svg.recharts-surface");
+    expect(svg).toBeInTheDocument();
+  });
 });

@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import { computeAnalytics } from "../utils/computeAnalytics";
 import SalesChart from "./SalesChart";
 import SortableTable from "./SortableTable";
@@ -125,5 +126,22 @@ function Analytics({ transactions }) {
     </div>
   );
 }
+
+StatCard.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+};
+
+Analytics.propTypes = {
+  transactions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      customerId: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired
+    })
+  ).isRequired
+};
 
 export default Analytics;

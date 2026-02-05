@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import PropTypes from "prop-types";
 import MonthlyBreakdown from "./MonthlyBreakdown";
 
 function CustomerRewards({ customer }) {
@@ -47,5 +48,19 @@ function CustomerRewards({ customer }) {
     </div>
   );
 }
+
+CustomerRewards.propTypes = {
+  customer: PropTypes.shape({
+    customerId: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    totalPoints: PropTypes.number.isRequired,
+    months: PropTypes.objectOf(
+      PropTypes.shape({
+        transactions: PropTypes.array.isRequired,
+        points: PropTypes.number.isRequired
+      })
+    ).isRequired
+  }).isRequired
+};
 
 export default CustomerRewards;

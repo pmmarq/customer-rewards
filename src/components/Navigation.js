@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Navigation({ activeTab, onTabChange }) {
   const tabs = ['Rewards', 'Analytics'];
@@ -23,5 +24,10 @@ function Navigation({ activeTab, onTabChange }) {
     </nav>
   );
 }
+
+Navigation.propTypes = {
+  activeTab: PropTypes.oneOf(['Rewards', 'Analytics']).isRequired,
+  onTabChange: PropTypes.func.isRequired
+};
 
 export default Navigation;

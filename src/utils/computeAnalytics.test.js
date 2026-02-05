@@ -80,4 +80,30 @@ describe('computeAnalytics', () => {
     expect(bob.transactionCount).toBe(2);
     expect(bob.totalSpent).toBeCloseTo(250.0);
   });
+
+  it('handles empty transactions array gracefully', () => {
+    const result = computeAnalytics([]);
+    expect(result.topCustomers).toEqual([]);
+    expect(result.monthlyTrends).toEqual([]);
+  });
+
+  it('computes correct monthly transaction counts', () => {
+    const result = computeAnalytics(mockTransactions);
+    const octoberTrends = result.monthlyTrends.find(m => m.month.includes('October'));
+    expect(octoberTrends.transactionCount).toBe(2);
+    expect(octoberTrends.totalSpent).toBeCloseTo(320.0);
+  });
+
+  it('handles transactions from same customer across different months', () => {
+    const sameCustomerTransactions = [
+      { id: 1, customerId: 1, name: 'John Doe', date: '2024-10-01', amount: 100 },
+      { id: 2, customerId: 1, name: 'John Doe', date: '2024-10-15', amount: 50 },
+      { id: 3, customerId: 1, name: 'John Doe', date: '2024-11-01', amount: 120 }
+    ];
+
+    const result = computeAnalytics(sameCustomerTransactions);
+    const john = result.topCustomers[0];
+    expect(john.totalPoints).toBe(50 + 0 + 90); // 50 from $100, 0 from $50, 90 from $120 = 140
+    expect(john.transactionCount).toBe(3);
+  });
 });
