@@ -1,9 +1,13 @@
+import { useState } from "react";
 import "./App.css";
 import { useTransactions } from "./hooks/useTransactions";
+import Navigation from "./components/Navigation";
 import RewardsSummary from "./components/RewardsSummary";
+import Analytics from "./components/Analytics";
 
 function App() {
   const { transactions, loading, error } = useTransactions();
+  const [activeTab, setActiveTab] = useState("Rewards");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -15,6 +19,7 @@ function App() {
           <p className="mt-2 text-indigo-200 text-base sm:text-lg">
             Points earned over the last 3 months
           </p>
+          <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
       </header>
 
@@ -35,7 +40,12 @@ function App() {
             <p className="text-red-600 font-medium">Error: {error}</p>
           </div>
         )}
-        {!loading && !error && <RewardsSummary transactions={transactions} />}
+        {!loading && !error && activeTab === "Rewards" && (
+          <RewardsSummary transactions={transactions} />
+        )}
+        {!loading && !error && activeTab === "Analytics" && (
+          <Analytics transactions={transactions} />
+        )}
       </main>
     </div>
   );
