@@ -1,6 +1,14 @@
 import { render, screen, within } from "@testing-library/react";
 import Analytics from "./Analytics";
 
+beforeAll(() => {
+  global.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+});
+
 const mockTransactions = [
   {
     id: 1,
@@ -67,6 +75,10 @@ describe("Analytics", () => {
       expect(screen.getByText(/October 2024/)).toBeInTheDocument();
       expect(screen.getByText(/November 2024/)).toBeInTheDocument();
       expect(screen.getByText(/December 2024/)).toBeInTheDocument();
+    });
+
+    it("renders the Sales Over Time chart section", () => {
+      expect(screen.getByText("Sales Over Time")).toBeInTheDocument();
     });
 
     it("renders the Top Customers table with ranks", () => {
