@@ -1,4 +1,4 @@
-import transactions from '../data/transactions';
+import transactions from "../data/transactions";
 
 /**
  * Simulate an asynchronous API call that returns the transaction data
@@ -8,8 +8,9 @@ import transactions from '../data/transactions';
  */
 export function fetchTransactions() {
   return new Promise((resolve) => {
+    const delay = Math.random() * 3000;
     setTimeout(() => {
       resolve(transactions);
-    }, 1000);
+    }, delay);
   });
 }

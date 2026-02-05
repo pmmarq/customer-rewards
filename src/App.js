@@ -13,7 +13,12 @@ function App() {
       </header>
 
       <main className="App-main">
-        {loading && <p className="status">Loading transactions...</p>}
+        {loading && (
+          <div className="loader" role="status">
+            <div className="spinner" />
+            <p>Loading transactions...</p>
+          </div>
+        )}
         {error && <p className="status error">Error: {error}</p>}
         {!loading && !error && <RewardsSummary transactions={transactions} />}
       </main>
