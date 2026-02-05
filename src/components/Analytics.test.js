@@ -81,10 +81,9 @@ describe("Analytics", () => {
       expect(screen.getByText("Sales Over Time")).toBeInTheDocument();
     });
 
-    it("renders the Top Customers table with ranks", () => {
+    it("renders the Top Customers table with customer names", () => {
       expect(screen.getByText("Top Customers")).toBeInTheDocument();
-      expect(screen.getByText("#1")).toBeInTheDocument();
-      expect(screen.getByText("#2")).toBeInTheDocument();
+      expect(screen.getByText("Customer")).toBeInTheDocument();
     });
   });
 

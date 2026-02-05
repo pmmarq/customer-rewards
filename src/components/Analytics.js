@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { computeAnalytics } from "../utils/computeAnalytics";
 import SalesChart from "./SalesChart";
+import SortableTable from "./SortableTable";
 
 function StatCard({ label, value }) {
   return (
@@ -59,102 +60,68 @@ function Analytics({ transactions }) {
       <SalesChart monthlyTrends={monthlyTrends} />
 
       {/* Monthly Trends Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Monthly Trends
-          </h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-slate-100 text-slate-500 uppercase text-xs tracking-wider">
-                <th className="text-left px-4 py-2.5 font-semibold">Month</th>
-                <th className="text-left px-4 py-2.5 font-semibold">
-                  Transactions
-                </th>
-                <th className="text-left px-4 py-2.5 font-semibold">
-                  Total Spent
-                </th>
-                <th className="text-right px-4 py-2.5 font-semibold">Points</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {monthlyTrends.map((row) => (
-                <tr
-                  key={row.month}
-                  className="hover:bg-slate-50 transition-colors"
-                >
-                  <td className="px-4 py-2.5 text-slate-700 font-medium">
-                    {row.month}
-                  </td>
-                  <td className="px-4 py-2.5 text-slate-700">
-                    {row.transactionCount}
-                  </td>
-                  <td className="px-4 py-2.5 text-slate-700">
-                    ${row.totalSpent.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2.5 text-right font-semibold text-indigo-600">
-                    {row.totalPoints}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <SortableTable
+        title="Monthly Trends"
+        data={monthlyTrends}
+        rowKey={(row) => row.month}
+        defaultSortKey="sortKey"
+        defaultSortDir="asc"
+        columns={[
+          {
+            key: "month",
+            label: "Month",
+            sortable: false,
+            cellClass: "text-slate-700 font-medium",
+          },
+          {
+            key: "sortKey",
+            label: "Month",
+            sortable: true,
+            cellClass: "hidden",
+            render: () => null,
+          },
+          { key: "transactionCount", label: "Transactions" },
+          {
+            key: "totalSpent",
+            label: "Total Spent",
+            render: (row) => `$${row.totalSpent.toFixed(2)}`,
+          },
+          {
+            key: "totalPoints",
+            label: "Points",
+            align: "right",
+            cellClass: "text-right font-semibold text-indigo-600",
+          },
+        ].filter((col) => col.key !== "sortKey")}
+      />
 
       {/* Top Customers Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-800">
-            Top Customers
-          </h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-slate-100 text-slate-500 uppercase text-xs tracking-wider">
-                <th className="text-left px-4 py-2.5 font-semibold">Rank</th>
-                <th className="text-left px-4 py-2.5 font-semibold">
-                  Customer
-                </th>
-                <th className="text-left px-4 py-2.5 font-semibold">
-                  Transactions
-                </th>
-                <th className="text-left px-4 py-2.5 font-semibold">
-                  Total Spent
-                </th>
-                <th className="text-right px-4 py-2.5 font-semibold">Points</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {topCustomers.map((customer, index) => (
-                <tr
-                  key={customer.customerId}
-                  className="hover:bg-slate-50 transition-colors"
-                >
-                  <td className="px-4 py-2.5 text-slate-500 font-medium">
-                    #{index + 1}
-                  </td>
-                  <td className="px-4 py-2.5 text-slate-700 font-medium">
-                    {customer.name}
-                  </td>
-                  <td className="px-4 py-2.5 text-slate-700">
-                    {customer.transactionCount}
-                  </td>
-                  <td className="px-4 py-2.5 text-slate-700">
-                    ${customer.totalSpent.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2.5 text-right font-semibold text-indigo-600">
-                    {customer.totalPoints}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <SortableTable
+        title="Top Customers"
+        data={topCustomers}
+        rowKey={(row) => row.customerId}
+        defaultSortKey="totalPoints"
+        defaultSortDir="desc"
+        columns={[
+          {
+            key: "name",
+            label: "Customer",
+            cellClass: "text-slate-700 font-medium",
+          },
+          { key: "transactionCount", label: "Transactions" },
+          {
+            key: "totalSpent",
+            label: "Total Spent",
+            render: (row) => `$${row.totalSpent.toFixed(2)}`,
+          },
+          {
+            key: "totalPoints",
+            label: "Points",
+            align: "right",
+            cellClass: "text-right font-semibold text-indigo-600",
+          },
+        ]}
+      />
     </div>
   );
 }
