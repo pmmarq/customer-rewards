@@ -140,6 +140,7 @@ function CustomerCombobox({ customers, value, onChange, error }) {
         id="customer-combobox"
         role="combobox"
         aria-expanded={isOpen}
+        aria-controls="customer-combobox-listbox"
         aria-haspopup="listbox"
         aria-autocomplete="list"
         autoComplete="off"
@@ -178,6 +179,7 @@ function CustomerCombobox({ customers, value, onChange, error }) {
       {isOpen && (
         <ul
           ref={listRef}
+          id="customer-combobox-listbox"
           role="listbox"
           className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-auto"
         >
