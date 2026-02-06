@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
   BarChart,
   Bar,
@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
@@ -19,9 +19,9 @@ function CustomTooltip({ active, payload, label }) {
       <p className="font-semibold text-slate-800 mb-1">{label}</p>
       {payload.map((entry) => (
         <p key={entry.name} style={{ color: entry.color }}>
-          {entry.name}:{' '}
+          {entry.name}:{" "}
           <span className="font-medium">
-            {entry.name === 'Total Spent'
+            {entry.name === "Total Spent"
               ? `$${entry.value.toFixed(2)}`
               : entry.value.toLocaleString()}
           </span>
@@ -36,7 +36,9 @@ function SalesChart({ monthlyTrends }) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-800">Sales Over Time</h2>
+          <h2 className="text-lg font-semibold text-slate-800">
+            Sales Over Time
+          </h2>
         </div>
         <p className="px-5 py-8 text-center text-slate-400 text-sm">
           No data available
@@ -48,7 +50,9 @@ function SalesChart({ monthlyTrends }) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div className="px-5 py-4 border-b border-slate-100">
-        <h2 className="text-lg font-semibold text-slate-800">Sales Over Time</h2>
+        <h2 className="text-lg font-semibold text-slate-800">
+          Sales Over Time
+        </h2>
       </div>
       <div className="p-4 sm:p-5">
         <ResponsiveContainer width="100%" height={300}>
@@ -59,19 +63,17 @@ function SalesChart({ monthlyTrends }) {
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis
               dataKey="month"
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 12, fill: "#64748b" }}
               tickLine={false}
-              axisLine={{ stroke: '#e2e8f0' }}
+              axisLine={{ stroke: "#e2e8f0" }}
             />
             <YAxis
-              tick={{ fontSize: 12, fill: '#64748b' }}
+              tick={{ fontSize: 12, fill: "#64748b" }}
               tickLine={false}
-              axisLine={{ stroke: '#e2e8f0' }}
+              axisLine={{ stroke: "#e2e8f0" }}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f1f5f9' }} />
-            <Legend
-              wrapperStyle={{ fontSize: '13px', paddingTop: '12px' }}
-            />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f1f5f9" }} />
+            <Legend wrapperStyle={{ fontSize: "13px", paddingTop: "12px" }} />
             <Bar
               dataKey="totalSpent"
               name="Total Spent"
@@ -94,7 +96,7 @@ function SalesChart({ monthlyTrends }) {
 CustomTooltip.propTypes = {
   active: PropTypes.bool,
   payload: PropTypes.array,
-  label: PropTypes.string
+  label: PropTypes.string,
 };
 
 SalesChart.propTypes = {
@@ -104,9 +106,9 @@ SalesChart.propTypes = {
       sortKey: PropTypes.string.isRequired,
       transactionCount: PropTypes.number.isRequired,
       totalSpent: PropTypes.number.isRequired,
-      totalPoints: PropTypes.number.isRequired
-    })
-  )
+      totalPoints: PropTypes.number.isRequired,
+    }),
+  ),
 };
 
-export default SalesChart;
+export default React.memo(SalesChart);

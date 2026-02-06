@@ -14,38 +14,20 @@ function CustomerCombobox({ customers, value, onChange, error }) {
     setInputValue(value);
   }, [value]);
 
-  // Get unique customers with transaction counts
-  const uniqueCustomers = useMemo(() => {
-    const customerMap = {};
-    customers.forEach((txn) => {
-      if (!customerMap[txn.customerId]) {
-        customerMap[txn.customerId] = {
-          customerId: txn.customerId,
-          name: txn.name,
-          transactionCount: 0,
-        };
-      }
-      customerMap[txn.customerId].transactionCount += 1;
-    });
-    return Object.values(customerMap).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-  }, [customers]);
-
-  // Filter customers based on input
+  // Filter customers based on input (customers is already pre-computed uniqueCustomers)
   const filteredCustomers = useMemo(() => {
-    if (!inputValue.trim()) return uniqueCustomers;
+    if (!inputValue.trim()) return customers;
     const search = inputValue.toLowerCase();
-    return uniqueCustomers.filter((c) => c.name.toLowerCase().includes(search));
-  }, [uniqueCustomers, inputValue]);
+    return customers.filter((c) => c.name.toLowerCase().includes(search));
+  }, [customers, inputValue]);
 
   // Check if current input matches an existing customer exactly
   const existingCustomer = useMemo(() => {
     if (!inputValue.trim()) return null;
-    return uniqueCustomers.find(
+    return customers.find(
       (c) => c.name.toLowerCase() === inputValue.trim().toLowerCase(),
     );
-  }, [uniqueCustomers, inputValue]);
+  }, [customers, inputValue]);
 
   const isNewCustomer = inputValue.trim() && !existingCustomer;
 
@@ -267,6 +249,7 @@ CustomerCombobox.propTypes = {
     PropTypes.shape({
       customerId: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
+      transactionCount: PropTypes.number.isRequired,
     }),
   ).isRequired,
   value: PropTypes.string.isRequired,
@@ -274,4 +257,4 @@ CustomerCombobox.propTypes = {
   error: PropTypes.string,
 };
 
-export default CustomerCombobox;
+export default React.memo(CustomerCombobox);

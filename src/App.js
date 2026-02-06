@@ -16,6 +16,24 @@ function App() {
     return [...apiTransactions, ...manualTransactions];
   }, [apiTransactions, manualTransactions]);
 
+  // Pre-compute unique customers to avoid duplicate derivations in Admin/CustomerCombobox
+  const uniqueCustomers = useMemo(() => {
+    const customerMap = {};
+    allTransactions.forEach((txn) => {
+      if (!customerMap[txn.customerId]) {
+        customerMap[txn.customerId] = {
+          customerId: txn.customerId,
+          name: txn.name,
+          transactionCount: 0,
+        };
+      }
+      customerMap[txn.customerId].transactionCount += 1;
+    });
+    return Object.values(customerMap).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
+  }, [allTransactions]);
+
   const getNextId = useCallback(() => {
     const maxId = allTransactions.reduce(
       (max, txn) => Math.max(max, txn.id),
@@ -90,6 +108,7 @@ function App() {
           <ErrorBoundary>
             <Admin
               transactions={allTransactions}
+              uniqueCustomers={uniqueCustomers}
               onAddTransaction={handleAddTransaction}
               onUpdateTransaction={handleUpdateTransaction}
               onDeleteTransaction={handleDeleteTransaction}

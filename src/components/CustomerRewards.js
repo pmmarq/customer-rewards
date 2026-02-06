@@ -57,10 +57,10 @@ CustomerRewards.propTypes = {
     months: PropTypes.objectOf(
       PropTypes.shape({
         transactions: PropTypes.array.isRequired,
-        points: PropTypes.number.isRequired
-      })
-    ).isRequired
-  }).isRequired
+        points: PropTypes.number.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
 };
 
-export default CustomerRewards;
+export default React.memo(CustomerRewards);

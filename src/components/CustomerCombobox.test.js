@@ -2,12 +2,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CustomerCombobox from "./CustomerCombobox";
 
+// Pre-computed unique customers (as would be passed from App.js)
 const mockCustomers = [
-  { customerId: 1, name: "Alice Smith" },
-  { customerId: 1, name: "Alice Smith" },
-  { customerId: 2, name: "Bob Johnson" },
-  { customerId: 2, name: "Bob Johnson" },
-  { customerId: 2, name: "Bob Johnson" },
+  { customerId: 1, name: "Alice Smith", transactionCount: 2 },
+  { customerId: 2, name: "Bob Johnson", transactionCount: 3 },
 ];
 
 const defaultProps = {

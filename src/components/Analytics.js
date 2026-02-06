@@ -13,6 +13,8 @@ function StatCard({ label, value }) {
   );
 }
 
+const MemoizedStatCard = React.memo(StatCard);
+
 function Analytics({ transactions }) {
   const analytics = useMemo(
     () => computeAnalytics(transactions),
@@ -33,10 +35,16 @@ function Analytics({ transactions }) {
     <div className="space-y-6">
       {/* Summary Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Total Customers" value={totalCustomers} />
-        <StatCard label="Total Transactions" value={totalTransactions} />
-        <StatCard label="Total Points" value={totalPoints.toLocaleString()} />
-        <StatCard
+        <MemoizedStatCard label="Total Customers" value={totalCustomers} />
+        <MemoizedStatCard
+          label="Total Transactions"
+          value={totalTransactions}
+        />
+        <MemoizedStatCard
+          label="Total Points"
+          value={totalPoints.toLocaleString()}
+        />
+        <MemoizedStatCard
           label="Avg Purchase"
           value={`$${averagePurchase.toFixed(2)}`}
         />
@@ -129,7 +137,7 @@ function Analytics({ transactions }) {
 
 StatCard.propTypes = {
   label: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 Analytics.propTypes = {
@@ -139,9 +147,9 @@ Analytics.propTypes = {
       customerId: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
-      amount: PropTypes.number.isRequired
-    })
-  ).isRequired
+      amount: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
 };
 
-export default Analytics;
+export default React.memo(Analytics);

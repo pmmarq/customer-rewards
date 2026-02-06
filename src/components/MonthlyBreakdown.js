@@ -45,10 +45,10 @@ MonthlyBreakdown.propTypes = {
       id: PropTypes.number.isRequired,
       date: PropTypes.string.isRequired,
       amount: PropTypes.number.isRequired,
-      points: PropTypes.number.isRequired
-    })
+      points: PropTypes.number.isRequired,
+    }),
   ).isRequired,
-  monthlyPoints: PropTypes.number.isRequired
+  monthlyPoints: PropTypes.number.isRequired,
 };
 
-export default MonthlyBreakdown;
+export default React.memo(MonthlyBreakdown);

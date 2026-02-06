@@ -30,4 +30,4 @@ Navigation.propTypes = {
   onTabChange: PropTypes.func.isRequired,
 };
 
-export default Navigation;
+export default React.memo(Navigation);

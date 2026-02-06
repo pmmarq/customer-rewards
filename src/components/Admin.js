@@ -5,6 +5,7 @@ import CustomerCombobox from "./CustomerCombobox";
 
 function Admin({
   transactions,
+  uniqueCustomers,
   onAddTransaction,
   onUpdateTransaction,
   onDeleteTransaction,
@@ -16,22 +17,6 @@ function Admin({
   });
   const [editingId, setEditingId] = useState(null);
   const [errors, setErrors] = useState({});
-
-  // Get unique customers with transaction counts
-  const uniqueCustomers = useMemo(() => {
-    const customerMap = {};
-    transactions.forEach((txn) => {
-      if (!customerMap[txn.customerId]) {
-        customerMap[txn.customerId] = {
-          customerId: txn.customerId,
-          name: txn.name,
-          transactionCount: 0,
-        };
-      }
-      customerMap[txn.customerId].transactionCount += 1;
-    });
-    return Object.values(customerMap);
-  }, [transactions]);
 
   // Check if current name matches an existing customer
   const existingCustomer = useMemo(() => {
@@ -144,7 +129,7 @@ function Admin({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <CustomerCombobox
-                customers={transactions}
+                customers={uniqueCustomers}
                 value={formData.name}
                 onChange={(name) => setFormData({ ...formData, name })}
                 error={errors.name}
@@ -374,9 +359,16 @@ Admin.propTypes = {
       isManual: PropTypes.bool,
     }),
   ).isRequired,
+  uniqueCustomers: PropTypes.arrayOf(
+    PropTypes.shape({
+      customerId: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      transactionCount: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
   onAddTransaction: PropTypes.func.isRequired,
   onUpdateTransaction: PropTypes.func.isRequired,
   onDeleteTransaction: PropTypes.func.isRequired,
 };
 
-export default Admin;
+export default React.memo(Admin);

@@ -138,4 +138,4 @@ SortableTable.propTypes = {
   defaultSortDir: PropTypes.oneOf(["asc", "desc"]),
 };
 
-export default SortableTable;
+export default React.memo(SortableTable);

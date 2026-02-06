@@ -21,16 +21,25 @@ const mockTransactions = [
   },
 ];
 
+const mockUniqueCustomers = [
+  { customerId: 1, name: "Alice Smith", transactionCount: 1 },
+  { customerId: 2, name: "Bob Johnson", transactionCount: 1 },
+];
+
 const mockHandlers = {
   onAddTransaction: jest.fn(),
   onUpdateTransaction: jest.fn(),
   onDeleteTransaction: jest.fn(),
 };
 
-function renderAdmin(transactions = mockTransactions) {
+function renderAdmin(
+  transactions = mockTransactions,
+  uniqueCustomers = mockUniqueCustomers,
+) {
   return render(
     <Admin
       transactions={transactions}
+      uniqueCustomers={uniqueCustomers}
       onAddTransaction={mockHandlers.onAddTransaction}
       onUpdateTransaction={mockHandlers.onUpdateTransaction}
       onDeleteTransaction={mockHandlers.onDeleteTransaction}
@@ -68,7 +77,7 @@ describe("Admin", () => {
     });
 
     it("shows empty state when no manual transactions exist", () => {
-      renderAdmin([]);
+      renderAdmin([], []);
       expect(
         screen.getByText("Manually Added Transactions (0)"),
       ).toBeInTheDocument();
@@ -346,7 +355,7 @@ describe("Admin", () => {
 
   describe("customer ID generation", () => {
     it("generates customerId as 1 when no transactions exist", () => {
-      renderAdmin([]);
+      renderAdmin([], []);
 
       userEvent.type(screen.getByLabelText("Customer Name"), "First Customer");
       userEvent.type(screen.getByLabelText("Transaction Date"), "2024-11-20");

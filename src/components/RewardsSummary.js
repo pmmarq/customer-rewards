@@ -63,9 +63,9 @@ RewardsSummary.propTypes = {
       customerId: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
-      amount: PropTypes.number.isRequired
-    })
-  ).isRequired
+      amount: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
 };
 
-export default RewardsSummary;
+export default React.memo(RewardsSummary);
