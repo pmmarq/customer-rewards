@@ -3,11 +3,12 @@ import userEvent from "@testing-library/user-event";
 import Navigation from "./Navigation";
 
 describe("Navigation", () => {
-  it("renders both tab buttons", () => {
+  it("renders all tab buttons", () => {
     render(<Navigation activeTab="Rewards" onTabChange={() => {}} />);
 
     expect(screen.getByRole("tab", { name: "Rewards" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Analytics" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Admin" })).toBeInTheDocument();
   });
 
   it("marks the active tab with aria-selected true", () => {

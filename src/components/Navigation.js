@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 function Navigation({ activeTab, onTabChange }) {
-  const tabs = ['Rewards', 'Analytics'];
+  const tabs = ["Rewards", "Analytics", "Admin"];
 
   return (
     <nav className="flex justify-center gap-1 mt-6" role="tablist">
@@ -14,8 +14,8 @@ function Navigation({ activeTab, onTabChange }) {
           onClick={() => onTabChange(tab)}
           className={`px-5 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === tab
-              ? 'bg-white text-indigo-700 shadow-sm'
-              : 'text-indigo-200 hover:text-white hover:bg-white/10'
+              ? "bg-white text-indigo-700 shadow-sm"
+              : "text-indigo-200 hover:text-white hover:bg-white/10"
           }`}
         >
           {tab}
@@ -26,8 +26,8 @@ function Navigation({ activeTab, onTabChange }) {
 }
 
 Navigation.propTypes = {
-  activeTab: PropTypes.oneOf(['Rewards', 'Analytics']).isRequired,
-  onTabChange: PropTypes.func.isRequired
+  activeTab: PropTypes.oneOf(["Rewards", "Analytics", "Admin"]).isRequired,
+  onTabChange: PropTypes.func.isRequired,
 };
 
 export default Navigation;

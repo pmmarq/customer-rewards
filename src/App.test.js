@@ -39,10 +39,11 @@ describe("App", () => {
     });
   });
 
-  it("renders Rewards and Analytics navigation tabs", async () => {
+  it("renders Rewards, Analytics, and Admin navigation tabs", async () => {
     render(<App />);
     expect(screen.getByRole("tab", { name: "Rewards" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Analytics" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Admin" })).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
@@ -106,5 +107,17 @@ describe("App", () => {
     await waitFor(() => {
       expect(screen.getByText("Error: Network failure")).toBeInTheDocument();
     });
+  });
+
+  it("switches to Admin view when Admin tab is clicked", async () => {
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    });
+
+    userEvent.click(screen.getByRole("tab", { name: "Admin" }));
+
+    expect(screen.getByText("Add New Transaction")).toBeInTheDocument();
+    expect(screen.getByLabelText("Customer Name")).toBeInTheDocument();
   });
 });

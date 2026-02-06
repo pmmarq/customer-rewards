@@ -1,14 +1,49 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import "./App.css";
 import { useTransactions } from "./hooks/useTransactions";
 import Navigation from "./components/Navigation";
 import RewardsSummary from "./components/RewardsSummary";
 import Analytics from "./components/Analytics";
+import Admin from "./components/Admin";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
-  const { transactions, loading, error } = useTransactions();
+  const { transactions: apiTransactions, loading, error } = useTransactions();
   const [activeTab, setActiveTab] = useState("Rewards");
+  const [manualTransactions, setManualTransactions] = useState([]);
+
+  const allTransactions = useMemo(() => {
+    return [...apiTransactions, ...manualTransactions];
+  }, [apiTransactions, manualTransactions]);
+
+  const getNextId = useCallback(() => {
+    const maxId = allTransactions.reduce(
+      (max, txn) => Math.max(max, txn.id),
+      0,
+    );
+    return maxId + 1;
+  }, [allTransactions]);
+
+  const handleAddTransaction = useCallback(
+    (transaction) => {
+      const newId = getNextId();
+      setManualTransactions((prev) => [
+        ...prev,
+        { ...transaction, id: newId, isManual: true },
+      ]);
+    },
+    [getNextId],
+  );
+
+  const handleUpdateTransaction = useCallback((id, updates) => {
+    setManualTransactions((prev) =>
+      prev.map((txn) => (txn.id === id ? { ...txn, ...updates } : txn)),
+    );
+  }, []);
+
+  const handleDeleteTransaction = useCallback((id) => {
+    setManualTransactions((prev) => prev.filter((txn) => txn.id !== id));
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -43,19 +78,27 @@ function App() {
         )}
         {!loading && !error && activeTab === "Rewards" && (
           <ErrorBoundary>
-            <RewardsSummary transactions={transactions} />
+            <RewardsSummary transactions={allTransactions} />
           </ErrorBoundary>
         )}
         {!loading && !error && activeTab === "Analytics" && (
           <ErrorBoundary>
-            <Analytics transactions={transactions} />
+            <Analytics transactions={allTransactions} />
+          </ErrorBoundary>
+        )}
+        {!loading && !error && activeTab === "Admin" && (
+          <ErrorBoundary>
+            <Admin
+              transactions={allTransactions}
+              onAddTransaction={handleAddTransaction}
+              onUpdateTransaction={handleUpdateTransaction}
+              onDeleteTransaction={handleDeleteTransaction}
+            />
           </ErrorBoundary>
         )}
       </main>
     </div>
   );
 }
-
-App.propTypes = {};
 
 export default App;
