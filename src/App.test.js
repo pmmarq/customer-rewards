@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 import * as api from "./services/api";
@@ -32,28 +33,41 @@ describe("App", () => {
   });
 
   it("renders the app header", async () => {
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     expect(screen.getByText(/customer rewards program/i)).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 
-  it("renders Rewards, Analytics, and Admin navigation tabs", async () => {
-    render(<App />);
-    expect(screen.getByRole("tab", { name: "Rewards" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Analytics" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Admin" })).toBeInTheDocument();
+  it("renders Rewards, Analytics, and Admin navigation links", async () => {
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByRole("link", { name: "Rewards" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Analytics" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Admin" })).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 
-  it("shows Rewards tab as active by default", async () => {
-    render(<App />);
-    expect(screen.getByRole("tab", { name: "Rewards" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+  it("shows Rewards tab as active by default (root path)", async () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <App />
+      </MemoryRouter>
+    );
+    // aria-current="page" is added by NavLink to the active link
+    expect(screen.getByRole("link", { name: "Rewards" })).toHaveAttribute(
+      "aria-current",
+      "page",
     );
     await waitFor(() => {
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
@@ -61,61 +75,85 @@ describe("App", () => {
   });
 
   it("shows RewardsSummary content by default after loading", async () => {
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.getByText("Alice Johnson")).toBeInTheDocument();
     });
   });
 
-  it("switches to Analytics view when Analytics tab is clicked", async () => {
-    render(<App />);
+  it("switches to Analytics view when Analytics link is clicked", async () => {
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByRole("tab", { name: "Analytics" }));
+    userEvent.click(screen.getByRole("link", { name: "Analytics" }));
 
     expect(screen.getByText("Total Customers")).toBeInTheDocument();
     expect(screen.getByText("Monthly Trends")).toBeInTheDocument();
   });
 
-  it("switches back to Rewards view when Rewards tab is clicked", async () => {
-    render(<App />);
+  it("switches back to Rewards view when Rewards link is clicked", async () => {
+    render(
+      <MemoryRouter initialEntries={["/analytics"]}>
+        <App />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByRole("tab", { name: "Analytics" }));
+    // Start at Analytics
     expect(screen.getByText("Total Customers")).toBeInTheDocument();
 
-    userEvent.click(screen.getByRole("tab", { name: "Rewards" }));
+    userEvent.click(screen.getByRole("link", { name: "Rewards" }));
     expect(screen.queryByText("Total Customers")).not.toBeInTheDocument();
     // Rewards-specific content: the points badge
     expect(screen.getByText("90 pts")).toBeInTheDocument();
   });
 
   it("shows the loading spinner initially", () => {
-    api.fetchTransactions.mockReturnValue(new Promise(() => {}));
-    render(<App />);
+    api.fetchTransactions.mockReturnValue(new Promise(() => { }));
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     expect(screen.getByRole("status")).toBeInTheDocument();
     expect(screen.getByText("Loading transactions...")).toBeInTheDocument();
   });
 
   it("displays an error message when the API call fails", async () => {
     api.fetchTransactions.mockRejectedValue(new Error("Network failure"));
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.getByText("Error: Network failure")).toBeInTheDocument();
     });
   });
 
-  it("switches to Admin view when Admin tab is clicked", async () => {
-    render(<App />);
+  it("switches to Admin view when Admin link is clicked", async () => {
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     await waitFor(() => {
       expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByRole("tab", { name: "Admin" }));
+    userEvent.click(screen.getByRole("link", { name: "Admin" }));
 
     expect(screen.getByText("Add New Transaction")).toBeInTheDocument();
     expect(screen.getByLabelText("Customer Name")).toBeInTheDocument();

@@ -1,52 +1,51 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import Navigation from "./Navigation";
 
 describe("Navigation", () => {
-  it("renders all tab buttons", () => {
-    render(<Navigation activeTab="Rewards" onTabChange={() => {}} />);
-
-    expect(screen.getByRole("tab", { name: "Rewards" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Analytics" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Admin" })).toBeInTheDocument();
-  });
-
-  it("marks the active tab with aria-selected true", () => {
-    render(<Navigation activeTab="Analytics" onTabChange={() => {}} />);
-
-    expect(screen.getByRole("tab", { name: "Analytics" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+  it("renders all tab links", () => {
+    render(
+      <MemoryRouter>
+        <Navigation />
+      </MemoryRouter>
     );
-    expect(screen.getByRole("tab", { name: "Rewards" })).toHaveAttribute(
-      "aria-selected",
-      "false",
+
+    expect(screen.getByRole("link", { name: "Rewards" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Analytics" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Admin" })).toBeInTheDocument();
+  });
+
+  it("marks the active tab with aria-current page", () => {
+    render(
+      <MemoryRouter initialEntries={["/analytics"]}>
+        <Navigation />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("link", { name: "Analytics" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "Rewards" })).not.toHaveAttribute(
+      "aria-current",
+      "page",
     );
   });
 
-  it("calls onTabChange with the tab name when clicked", () => {
-    const handleChange = jest.fn();
-    render(<Navigation activeTab="Rewards" onTabChange={handleChange} />);
-
-    userEvent.click(screen.getByRole("tab", { name: "Analytics" }));
-
-    expect(handleChange).toHaveBeenCalledTimes(1);
-    expect(handleChange).toHaveBeenCalledWith("Analytics");
-  });
+  // Removed onTabChange test as it's handled by Router now
 
   it("applies distinct styling to the active tab", () => {
-    render(<Navigation activeTab="Rewards" onTabChange={() => {}} />);
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <Navigation />
+      </MemoryRouter>
+    );
 
-    const activeTab = screen.getByRole("tab", { name: "Rewards" });
-    const inactiveTab = screen.getByRole("tab", { name: "Analytics" });
+    const activeTab = screen.getByRole("link", { name: "Rewards" });
+    const inactiveTab = screen.getByRole("link", { name: "Analytics" });
 
     expect(activeTab.className).toContain("text-indigo-700");
     expect(inactiveTab.className).toContain("text-indigo-200");
-  });
-
-  it("renders within a tablist role", () => {
-    render(<Navigation activeTab="Rewards" onTabChange={() => {}} />);
-
-    expect(screen.getByRole("tablist")).toBeInTheDocument();
   });
 });
