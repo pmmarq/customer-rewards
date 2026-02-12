@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import { useTransactions } from "./hooks/useTransactions";
 import Navigation from "./components/Navigation";
@@ -9,7 +10,6 @@ import ErrorBoundary from "./components/ErrorBoundary";
 
 function App() {
   const { transactions: apiTransactions, loading, error } = useTransactions();
-  const [activeTab, setActiveTab] = useState("Rewards");
   const [manualTransactions, setManualTransactions] = useState([]);
 
   const allTransactions = useMemo(() => {
@@ -73,7 +73,7 @@ function App() {
           <p className="mt-2 text-indigo-200 text-base sm:text-lg">
             Points earned over the last 3 months
           </p>
-          <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+          <Navigation />
         </div>
       </header>
 
@@ -94,26 +94,39 @@ function App() {
             <p className="text-red-600 font-medium">Error: {error}</p>
           </div>
         )}
-        {!loading && !error && activeTab === "Rewards" && (
-          <ErrorBoundary>
-            <RewardsSummary transactions={allTransactions} />
-          </ErrorBoundary>
-        )}
-        {!loading && !error && activeTab === "Analytics" && (
-          <ErrorBoundary>
-            <Analytics transactions={allTransactions} />
-          </ErrorBoundary>
-        )}
-        {!loading && !error && activeTab === "Admin" && (
-          <ErrorBoundary>
-            <Admin
-              transactions={allTransactions}
-              uniqueCustomers={uniqueCustomers}
-              onAddTransaction={handleAddTransaction}
-              onUpdateTransaction={handleUpdateTransaction}
-              onDeleteTransaction={handleDeleteTransaction}
+        {!loading && !error && (
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ErrorBoundary>
+                  <RewardsSummary transactions={allTransactions} />
+                </ErrorBoundary>
+              }
             />
-          </ErrorBoundary>
+            <Route
+              path="/analytics"
+              element={
+                <ErrorBoundary>
+                  <Analytics transactions={allTransactions} />
+                </ErrorBoundary>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ErrorBoundary>
+                  <Admin
+                    transactions={allTransactions}
+                    uniqueCustomers={uniqueCustomers}
+                    onAddTransaction={handleAddTransaction}
+                    onUpdateTransaction={handleUpdateTransaction}
+                    onDeleteTransaction={handleDeleteTransaction}
+                  />
+                </ErrorBoundary>
+              }
+            />
+          </Routes>
         )}
       </main>
     </div>

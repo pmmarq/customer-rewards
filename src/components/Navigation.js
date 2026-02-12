@@ -1,33 +1,31 @@
-import React from "react";
-import PropTypes from "prop-types";
+import { memo } from "react";
+import { NavLink } from "react-router-dom";
 
-function Navigation({ activeTab, onTabChange }) {
-  const tabs = ["Rewards", "Analytics", "Admin"];
+function Navigation() {
+  const tabs = [
+    { name: "Rewards", path: "/" },
+    { name: "Analytics", path: "/analytics" },
+    { name: "Admin", path: "/admin" },
+  ];
 
   return (
-    <nav className="flex justify-center gap-1 mt-6" role="tablist">
+    <nav className="flex justify-center gap-1 mt-6">
       {tabs.map((tab) => (
-        <button
-          key={tab}
-          role="tab"
-          aria-selected={activeTab === tab}
-          onClick={() => onTabChange(tab)}
-          className={`px-5 py-2 text-sm font-semibold rounded-full transition-colors ${
-            activeTab === tab
+        <NavLink
+          key={tab.name}
+          to={tab.path}
+          className={({ isActive }) =>
+            `px-5 py-2 text-sm font-semibold rounded-full transition-colors ${isActive
               ? "bg-white text-indigo-700 shadow-sm"
               : "text-indigo-200 hover:text-white hover:bg-white/10"
-          }`}
+            }`
+          }
         >
-          {tab}
-        </button>
+          {tab.name}
+        </NavLink>
       ))}
     </nav>
   );
 }
 
-Navigation.propTypes = {
-  activeTab: PropTypes.oneOf(["Rewards", "Analytics", "Admin"]).isRequired,
-  onTabChange: PropTypes.func.isRequired,
-};
-
-export default React.memo(Navigation);
+export default memo(Navigation);
